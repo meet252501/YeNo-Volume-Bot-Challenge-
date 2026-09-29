@@ -24,9 +24,9 @@ jobs:
         run: ruff check .
 
       - name: Test
-        run: pytest -v --cov=src
+        run: python test_bot.py
 
       - name: No-network smoke test
         run: |
           docker build -t yeno-bot .
-          docker run --network=none yeno-bot python -c "from src.decision import decide; print('imports cleanly with no network')"
+          docker run --network=none yeno-bot python -c "import bot; print('imports cleanly with no network')"
