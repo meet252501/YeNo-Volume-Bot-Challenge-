@@ -2,6 +2,7 @@
 Cycle accounting — complete-cycle-only eligible volume, matching the
 evaluator's own accounting exactly. See docs/algorithms/cycle_accounting.md.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -35,9 +36,7 @@ class Cycle:
         self.sell_notional_accum += notional
         if is_final_fill:
             self.state = CycleState.CLOSED
-            self.eligible_volume_contribution = (
-                self.buy_notional_accum + self.sell_notional_accum
-            )
+            self.eligible_volume_contribution = self.buy_notional_accum + self.sell_notional_accum
         else:
             self.state = CycleState.CLOSING
 
@@ -53,13 +52,15 @@ class Cycle:
 @dataclass
 class CycleTracker:
     """Tracks eligible volume across a full run, one cycle at a time."""
+
     cycles: list[Cycle] = field(default_factory=list)
     current: Cycle = field(default_factory=Cycle)
 
     @property
     def total_eligible_volume(self) -> float:
         return sum(
-            c.eligible_volume_contribution for c in self.cycles
+            c.eligible_volume_contribution
+            for c in self.cycles
             if c.eligible_volume_contribution is not None
         )
 

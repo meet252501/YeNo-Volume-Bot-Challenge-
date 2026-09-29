@@ -26,10 +26,10 @@ false confidence.
 ```python
 @dataclass
 class ReplayReport:
-    path_results: list[float]        # ending cash per path
-    flat_count: int                  # paths that ended flat
+    path_results: list[float]  # ending cash per path
+    flat_count: int  # paths that ended flat
     total_paths: int
-    hit_target_count: int            # paths that crossed $1,000
+    hit_target_count: int  # paths that crossed $1,000
     stressed_path_results: list[float]  # under 2-cent adverse execution
     median: float
     best: float

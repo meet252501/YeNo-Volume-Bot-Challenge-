@@ -2,6 +2,7 @@
 Tests for src/cycle_tracker.py, including the brief's own worked
 example: $5.00 gross BUY, $4.91 gross SELL -> $9.91 credited.
 """
+
 import pytest
 
 from src.cycle_tracker import Cycle, CycleState, CycleTracker

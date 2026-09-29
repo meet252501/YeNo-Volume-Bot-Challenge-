@@ -4,10 +4,8 @@ NOT executed in the sandbox that built this scaffold (no pydantic,
 no network to install it). Run `make dev-install && pytest tests/test_decision.py -v`
 in a real environment to confirm before trusting this file.
 """
-import pytest
 
-from src.cycle_tracker import CycleTracker
-from src.decision import causal_signal_aligned, entry_score, validate_state
+from src.decision import entry_score, validate_state
 from src.models import DecideRequest
 
 

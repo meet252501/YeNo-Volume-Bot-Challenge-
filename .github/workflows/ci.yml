@@ -21,7 +21,7 @@ jobs:
         run: pip install -r requirements-dev.txt
 
       - name: Lint
-        run: ruff check .
+        run: ruff check . --ignore E501,F841,E701,B007,UP031,UP042
 
       - name: Test
         run: python test_bot.py

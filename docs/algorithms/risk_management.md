@@ -10,6 +10,7 @@ ranking metric.
 ```python
 SAFETY_MARGIN_USD = 0.15  # buffer below the hard $5.00 cap
 
+
 def max_buy_size(remaining_cash: float) -> float:
     return min(5.00 - SAFETY_MARGIN_USD, remaining_cash)
 ```

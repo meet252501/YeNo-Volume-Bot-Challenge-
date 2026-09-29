@@ -3,6 +3,7 @@ Pydantic models for the /decide contract. Working copy reconstructed
 from the challenge page's published example — see docs/data_schema.md
 for open questions to verify against the real evaluator contract.
 """
+
 from __future__ import annotations
 
 from typing import Literal

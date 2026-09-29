@@ -61,9 +61,7 @@ class Cycle:
         self.sell_notional_accum += notional
         if is_final_fill:
             self.state = "CLOSED"
-            self.eligible_volume_contribution = (
-                self.buy_notional_accum + self.sell_notional_accum
-            )
+            self.eligible_volume_contribution = self.buy_notional_accum + self.sell_notional_accum
         else:
             self.state = "CLOSING"
 ```

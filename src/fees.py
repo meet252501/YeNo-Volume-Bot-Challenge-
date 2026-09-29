@@ -3,6 +3,7 @@ Fee model — both layers, verified against real Polymarket documentation.
 See docs/algorithms/fee_model.md and docs/RESEARCH.md for the research
 grounding these constants.
 """
+
 from __future__ import annotations
 
 YENO_OVERLAY_RATE = 0.01
@@ -23,8 +24,12 @@ def entry_or_exit_fee(notional_usd: float, shares: float, price: float) -> float
 
 
 def round_trip_fee_estimate(
-    entry_notional: float, entry_price: float, entry_shares: float,
-    exit_notional: float, exit_price: float, exit_shares: float,
+    entry_notional: float,
+    entry_price: float,
+    entry_shares: float,
+    exit_notional: float,
+    exit_price: float,
+    exit_shares: float,
 ) -> float:
     entry_fee = entry_or_exit_fee(entry_notional, entry_shares, entry_price)
     exit_fee = entry_or_exit_fee(exit_notional, exit_shares, exit_price)

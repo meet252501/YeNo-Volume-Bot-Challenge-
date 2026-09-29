@@ -1,4 +1,5 @@
 """Tests for src/risk.py."""
+
 import pytest
 
 from src.risk import (
@@ -47,6 +48,7 @@ def test_in_tested_profitable_band():
     """Per docs/RESEARCH.md §7b: real competitor data found 0.30-0.80
     profitable, entries above ~0.90 lost money on the week."""
     from src.risk import in_tested_profitable_band
+
     assert in_tested_profitable_band(0.50) is True
     assert in_tested_profitable_band(0.30) is True
     assert in_tested_profitable_band(0.80) is True

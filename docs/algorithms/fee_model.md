@@ -9,6 +9,7 @@ Verified against real, current Polymarket documentation (see
 ```python
 YENO_OVERLAY_RATE = 0.01  # 1%, observed from YeNo test-account execution
 
+
 def yeno_overlay_fee(notional_usd: float) -> float:
     return notional_usd * YENO_OVERLAY_RATE
 ```
@@ -17,6 +18,7 @@ def yeno_overlay_fee(notional_usd: float) -> float:
 ```python
 CRYPTO_TAKER_RATE = 0.07  # confirmed against real Polymarket crypto feeRate
 
+
 def taker_fee(shares: float, price: float) -> float:
     """fee = shares * feeRate * price * (1 - price) — peaks at price=0.50."""
     return shares * CRYPTO_TAKER_RATE * price * (1 - price)
@@ -24,9 +26,13 @@ def taker_fee(shares: float, price: float) -> float:
 
 ### Combined round-trip cost estimate
 ```python
-def round_trip_fee_estimate(entry_notional: float, entry_price: float,
-                              exit_notional: float, exit_price: float,
-                              shares: float) -> float:
+def round_trip_fee_estimate(
+    entry_notional: float,
+    entry_price: float,
+    exit_notional: float,
+    exit_price: float,
+    shares: float,
+) -> float:
     entry_fee = yeno_overlay_fee(entry_notional) + taker_fee(shares, entry_price)
     exit_fee = yeno_overlay_fee(exit_notional) + taker_fee(shares, exit_price)
     return entry_fee + exit_fee

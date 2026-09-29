@@ -2,6 +2,7 @@
 Risk management: sizing, favorite-longshot haircut, drawdown tracking,
 flatten-by-deadline. See docs/algorithms/risk_management.md.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass

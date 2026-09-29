@@ -4,6 +4,7 @@ CLI entry point for running the replay backtest.
 Usage:
     python scripts/run_backtest.py --replay-dir data/replay --report out/backtest-report.json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -27,15 +28,20 @@ def main() -> None:
 
     out_path = Path(args.report)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps({
-        "median": report.median,
-        "best": report.best,
-        "worst": report.worst,
-        "flat_rate_pct": report.flat_rate_pct,
-        "hit_target_rate_pct": report.hit_target_rate_pct,
-        "path_results": report.path_results,
-        "stressed_path_results": report.stressed_path_results,
-    }, indent=2))
+    out_path.write_text(
+        json.dumps(
+            {
+                "median": report.median,
+                "best": report.best,
+                "worst": report.worst,
+                "flat_rate_pct": report.flat_rate_pct,
+                "hit_target_rate_pct": report.hit_target_rate_pct,
+                "path_results": report.path_results,
+                "stressed_path_results": report.stressed_path_results,
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

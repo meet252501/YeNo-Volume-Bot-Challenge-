@@ -1,4 +1,5 @@
 import json
+
 from bot import VelocityBot
 
 bot = VelocityBot()
@@ -15,7 +16,7 @@ sample = {
     },
     "books": {
         "YES": {"bids": [[0.49, 100]], "asks": [[0.50, 100]]},
-        "NO":  {"bids": [[0.49, 100]], "asks": [[0.50, 100]]},
+        "NO": {"bids": [[0.49, 100]], "asks": [[0.50, 100]]},
     },
     "timestamp": 1789880824.0,
 }

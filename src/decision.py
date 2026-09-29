@@ -2,6 +2,7 @@
 Core decision logic: HOLD / BUY / SELL. Pure function of request state
 + internal tracker state -> decision. See docs/algorithms/decision_algorithm.md.
 """
+
 from __future__ import annotations
 
 from src.cycle_tracker import CycleTracker
@@ -53,8 +54,9 @@ def causal_signal_aligned(request: DecideRequest, outcome_price: float) -> bool:
     return up_signal == (not yes_is_cheap_side)
 
 
-def decide(request: DecideRequest, tracker: CycleTracker, now: float,
-           seconds_remaining_in_run: float) -> DecideResponse:
+def decide(
+    request: DecideRequest, tracker: CycleTracker, now: float, seconds_remaining_in_run: float
+) -> DecideResponse:
     """
     Main entry point. Pure given (request, tracker state, now,
     seconds_remaining_in_run) — no hidden global state.

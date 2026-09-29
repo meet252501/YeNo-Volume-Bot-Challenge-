@@ -2,6 +2,7 @@
 Tests for src/fees.py, including the brief's own worked example as a
 golden test case.
 """
+
 import pytest
 
 from src.fees import distance_from_mid, entry_or_exit_fee, taker_fee, yeno_overlay_fee

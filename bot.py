@@ -48,10 +48,10 @@ from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 
-
 # ═══════════════════════════════════════════════════════════════════════
 # ORDER BOOK HELPERS
 # ═══════════════════════════════════════════════════════════════════════
+
 
 def _levels(rows: Any, *, reverse: bool) -> list[tuple[float, float]]:
     """Parse L2 rows into sorted (price, size) tuples."""
@@ -89,6 +89,7 @@ def _total_depth(rows: Any) -> float:
 # Both applied on entry AND exit.
 # ═══════════════════════════════════════════════════════════════════════
 
+
 def _fees_for_fills(fills: list[tuple[float, float]]) -> float:
     """Compute total fees (both layers) for a set of (price, shares) fills."""
     gross = sum(price * shares for price, shares in fills)
@@ -100,7 +101,9 @@ def _fees_for_fills(fills: list[tuple[float, float]]) -> float:
     return round(protocol + 1e-12, 5) + round(overlay + 1e-12, 5)
 
 
-def _walk_asks(asks_raw: Any, target_shares: float) -> tuple[float, float, list[tuple[float, float]]] | None:
+def _walk_asks(
+    asks_raw: Any, target_shares: float
+) -> tuple[float, float, list[tuple[float, float]]] | None:
     """Walk the ask side to buy `target_shares`.
     Returns (gross_cost, fees, fills) or None if insufficient depth."""
     remaining = target_shares
@@ -118,7 +121,9 @@ def _walk_asks(asks_raw: Any, target_shares: float) -> tuple[float, float, list[
     return gross, fees, fills
 
 
-def _walk_bids(bids_raw: Any, target_shares: float) -> tuple[float, float, list[tuple[float, float]]] | None:
+def _walk_bids(
+    bids_raw: Any, target_shares: float
+) -> tuple[float, float, list[tuple[float, float]]] | None:
     """Walk the bid side to sell `target_shares`.
     Returns (gross_proceeds, fees, fills) or None if insufficient depth."""
     remaining = target_shares
@@ -140,6 +145,7 @@ def _walk_bids(bids_raw: Any, target_shares: float) -> tuple[float, float, list[
 # TWAP TRACKER — Settlement is TWAP over final 60s vs 60s before open
 # (98% match rate, vs 87% for last-price — RESEARCH.md §7a)
 # ═══════════════════════════════════════════════════════════════════════
+
 
 class TWAPTracker:
     """Rolling window of BTC mid observations for TWAP settlement projection."""
@@ -185,14 +191,16 @@ class TWAPTracker:
 # with a $10-30 drifting offset.
 # ═══════════════════════════════════════════════════════════════════════
 
+
 class OffsetEstimator:
     """Estimates feed offset when book is balanced (near 0.50)."""
 
     def __init__(self, max_samples: int = 40) -> None:
         self.samples: deque[float] = deque(maxlen=max_samples)
 
-    def maybe_record(self, btc_mid: float, target: float,
-                     yes_ask: float | None, no_ask: float | None) -> None:
+    def maybe_record(
+        self, btc_mid: float, target: float, yes_ask: float | None, no_ask: float | None
+    ) -> None:
         if yes_ask is not None and no_ask is not None:
             if 0.44 <= yes_ask <= 0.56 and 0.44 <= no_ask <= 0.56:
                 self.samples.append(btc_mid - target)
@@ -208,6 +216,7 @@ class OffsetEstimator:
 # ═══════════════════════════════════════════════════════════════════════
 # THE BOT
 # ═══════════════════════════════════════════════════════════════════════
+
 
 class VelocityBot:
     """
@@ -245,15 +254,15 @@ class VelocityBot:
 
     # BTC gap thresholds
     # Competitor data: $20-50 gap at 30-60s before close = 96% win rate
-    MIN_GAP_USD = 15.0        # base minimum gap
-    STRONG_GAP_USD = 40.0     # gap considered "strong signal"
+    MIN_GAP_USD = 15.0  # base minimum gap
+    STRONG_GAP_USD = 40.0  # gap considered "strong signal"
 
     # Reference data freshness
     MAX_REFERENCE_AGE_S = 2.0
 
     # Risk per trade
-    MAX_IMMEDIATE_LOSS_USD = 0.45   # reject entries with worse round-trip
-    STOP_LOSS_PER_SHARE = 0.09      # per-share stop loss
+    MAX_IMMEDIATE_LOSS_USD = 0.45  # reject entries with worse round-trip
+    STOP_LOSS_PER_SHARE = 0.09  # per-share stop loss
     TAKE_PROFIT_THRESHOLD = -0.015  # exit when PnL >= this (near break-even)
 
     # Per-market limits
@@ -290,8 +299,7 @@ class VelocityBot:
     def decide(self, obs: dict[str, Any]) -> dict[str, Any]:
         try:
             return self._decide(obs)
-        except (KeyError, TypeError, ValueError, OverflowError,
-                ZeroDivisionError, IndexError):
+        except (KeyError, TypeError, ValueError, OverflowError, ZeroDivisionError, IndexError):
             return {"action": "HOLD"}
 
     def _decide(self, obs: dict[str, Any]) -> dict[str, Any]:
@@ -301,7 +309,7 @@ class VelocityBot:
         books = obs["books"]
         rules = obs.get("rules", {})
         now = float(obs.get("timestamp", time.time()))
-        ttc = float(market["secondsToClose"])         # time to close
+        ttc = float(market["secondsToClose"])  # time to close
         mid = str(market["id"])
         position = account.get("position")
         cash = float(account["cashUsd"])
@@ -329,8 +337,7 @@ class VelocityBot:
 
         # ── Feed updates ──
         ref = obs.get("reference")
-        ref_valid = (isinstance(ref, dict)
-                     and not bool(ref.get("targetProvisional", True)))
+        ref_valid = isinstance(ref, dict) and not bool(ref.get("targetProvisional", True))
 
         if ref_valid:
             btc = float(ref["btcMidUsd"])
@@ -385,17 +392,19 @@ class VelocityBot:
             if "notional_paid" in position:
                 paid = float(position["notional_paid"])
             else:
-                paid = (float(position.get("buy_gross_usd", 0))
-                        + float(position.get("buy_fees_usd", 0)))
-            
+                paid = float(position.get("buy_gross_usd", 0)) + float(
+                    position.get("buy_fees_usd", 0)
+                )
+
             # For partial sells that have already happened (if any)
-            already_received = (float(position.get("sell_gross_usd", 0))
-                                - float(position.get("sell_fees_usd", 0)))
-            
+            already_received = float(position.get("sell_gross_usd", 0)) - float(
+                position.get("sell_fees_usd", 0)
+            )
+
             # If we still can't find a cost basis, we assume the worst-case (0.90 per share) to avoid instant-selling
             if paid <= 1e-9:
                 paid = shares * 0.90
-                
+
             pnl = already_received + sell_gross - sell_fees - paid
 
             # Take profit: exit at near-break-even or better
@@ -593,6 +602,7 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     import sys
+
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8080
     print(f"Velocity Bot v2 | 127.0.0.1:{port} | POST /decide")
     ThreadingHTTPServer(("127.0.0.1", port), Handler).serve_forever()

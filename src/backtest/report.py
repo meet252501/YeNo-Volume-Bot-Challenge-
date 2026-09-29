@@ -1,4 +1,5 @@
 """Replay report shape — matches Builderr's own published benchmark format."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
