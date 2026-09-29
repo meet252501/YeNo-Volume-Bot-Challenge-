@@ -1,0 +1,16 @@
+services:
+  bot:
+    build: .
+    ports:
+      - "8000:8000"
+    # No external network dependency by design — this service should
+    # work identically with network fully disabled, matching how the
+    # real evaluator runs submissions.
+    network_mode: "bridge"
+
+  backtest:
+    build: .
+    command: ["python", "scripts/run_backtest.py", "--replay-dir", "data/replay", "--report", "out/backtest-report.json"]
+    volumes:
+      - ./data:/app/data
+      - ./out:/app/out

@@ -1,0 +1,6 @@
+{
+  "description": "The brief's own worked example — golden test case for cycle accounting",
+  "gross_buy_usd": 5.00,
+  "gross_sell_usd": 4.91,
+  "credited_eligible_volume_usd": 9.91
+}

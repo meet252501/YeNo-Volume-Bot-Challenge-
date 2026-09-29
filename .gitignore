@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.env
+
+# Large/generated replay data — keep only small committed samples in
+# data/samples/, not full replay sets, unless licensing/size is confirmed fine
+data/replay/*
+!data/replay/.gitkeep
+
+# Backtest run outputs
+out/
+*.sqlite
+trials.csv
+
+.vscode/
+.idea/
+.DS_Store
